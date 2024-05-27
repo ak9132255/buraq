@@ -1,144 +1,965 @@
-
 {
-  "outbounds": 
-  [
+  "log": {
+    "level": "warn",
+    "output": "box.log",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns-remote",
+        "address": "https://8.8.8.8/dns-query",
+        "address_resolver": "dns-direct"
+      },
+      {
+        "tag": "dns-trick-direct",
+        "address": "https://sky.rethinkdns.com/",
+        "detour": "direct-fragment"
+      },
+      {
+        "tag": "dns-direct",
+        "address": "8.8.8.8",
+        "address_resolver": "dns-local",
+        "detour": "direct"
+      },
+      {
+        "tag": "dns-local",
+        "address": "local",
+        "detour": "direct"
+      },
+      {
+        "tag": "dns-block",
+        "address": "rcode://success"
+      }
+    ],
+    "rules": [
+      {
+        "domain": "cp.cloudflare.com",
+        "server": "dns-remote",
+        "rewrite_ttl": 3000
+      }
+    ],
+    "final": "dns-remote",
+    "static_ips": {
+      "sky.rethinkdns.com": [
+        "188.114.98.0",
+        "188.114.99.0",
+        "2a06:98c1:3120::6",
+        "2a06:98c1:3121::6",
+        "104.18.203.232",
+        "104.18.202.232",
+        "188.114.96.3",
+        "188.114.97.3",
+        "2a06:98c1:3120::6",
+        "2a06:98c1:3121::6"
+      ]
+    },
+    "independent_cache": true
+  },
+  "inbounds": [
     {
-      "type": "wireguard",
-      "tag": "Warp-IR2",
-      "server": "162.159.192.115",
-      "server_port": 2506,
-
-      "local_address": [
-        "172.16.0.2/32",
-        "2606:4700:110:89d5:8d56:9c45:20f2:addb/128"
-      ],
-      "private_key": "iNVO95I2rjoOaHMZ0wIyAj+9nUx8jn+kk6HBV2OxOUk=",
-      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-      "reserved": [243,133,192],
-
-      "mtu": 1280,
-      "fake_packets": "5-10"
+      "type": "tun",
+      "tag": "tun-in",
+      "mtu": 9000,
+      "inet4_address": "172.19.0.1/28",
+      "inet6_address": "fdfe:dcba:9876::1/126",
+      "auto_route": true,
+      "strict_route": true,
+      "endpoint_independent_nat": true,
+      "stack": "mixed",
+      "sniff": true,
+      "sniff_override_destination": true
     },
     {
-      "type": "wireguard",
-      "tag": "Warp-Main2",
-      "detour": "Warp-IR2",
-      "server": "162.159.192.115",
-      "server_port": 2506,
-      
-      "local_address": [
-          "172.16.0.2/32",
-          "2606:4700:110:81a6:7dad:c4e0:7955:b709/128"
-      ],
-      "private_key": "ACfkRpqyMOyrdzU80mQ3+2GUUDRmIyEqhL1d3EO0CE0=",
-      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-      "reserved": [85,140,142],  
-
-      "mtu": 1120,
-      "fake_packets": "5-10"
-    },{
-      "type": "wireguard",
-      "tag": "Warp-IR3",
-      "server": "162.159.192.106",
-      "server_port": 2506,
-
-      "local_address": [
-        "172.16.0.2/32",
-        "2606:4700:110:89d5:8d56:9c45:20f2:addb/128"
-      ],
-      "private_key": "iNVO95I2rjoOaHMZ0wIyAj+9nUx8jn+kk6HBV2OxOUk=",
-      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-      "reserved": [243,133,192],
-
-      "mtu": 1280,
-      "fake_packets": "5-10"
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 2334,
+      "sniff": true,
+      "sniff_override_destination": true
     },
     {
-      "type": "wireguard",
-      "tag": "Warp-Main3",
-      "detour": "Warp-IR3",
-      "server": "162.159.192.106",
-      "server_port": 2506,
-      
-      "local_address": [
-          "172.16.0.2/32",
-          "2606:4700:110:81a6:7dad:c4e0:7955:b709/128"
-      ],
-      "private_key": "ACfkRpqyMOyrdzU80mQ3+2GUUDRmIyEqhL1d3EO0CE0=",
-      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-      "reserved": [85,140,142],  
-
-      "mtu": 1120,
-      "fake_packets": "5-10"
-    },{
-      "type": "wireguard",
-      "tag": "Warp-IR4",
-      "server": "188.114.96.11",
-      "server_port": 4233,
-
-      "local_address": [
-        "172.16.0.2/32",
-        "2606:4700:110:89d5:8d56:9c45:20f2:addb/128"
-      ],
-      "private_key": "iNVO95I2rjoOaHMZ0wIyAj+9nUx8jn+kk6HBV2OxOUk=",
-      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-      "reserved": [243,133,192],
-
-      "mtu": 1280,
-      "fake_packets": "5-10"
-    },
-    {
-      "type": "wireguard",
-      "tag": "Warp-Main4",
-      "detour": "Warp-IR4",
-      "server": "188.114.96.11",
-      "server_port": 4233,
-      
-      "local_address": [
-          "172.16.0.2/32",
-          "2606:4700:110:81a6:7dad:c4e0:7955:b709/128"
-      ],
-      "private_key": "ACfkRpqyMOyrdzU80mQ3+2GUUDRmIyEqhL1d3EO0CE0=",
-      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-      "reserved": [85,140,142],  
-
-      "mtu": 1120,
-      "fake_packets": "5-10"
-    },{
-      "type": "wireguard",
-      "tag": "Warp-IR5",
-      "server": "162.159.192.100",
-      "server_port": 4233,
-
-      "local_address": [
-        "172.16.0.2/32",
-        "2606:4700:110:89d5:8d56:9c45:20f2:addb/128"
-      ],
-      "private_key": "iNVO95I2rjoOaHMZ0wIyAj+9nUx8jn+kk6HBV2OxOUk=",
-      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-      "reserved": [243,133,192],
-
-      "mtu": 1280,
-      "fake_packets": "5-10"
-    },
-    {
-      "type": "wireguard",
-      "tag": "Warp-Main5",
-      "detour": "Warp-IR5",
-      "server": "162.159.192.100",
-      "server_port": 4233,
-      
-      "local_address": [
-          "172.16.0.2/32",
-          "2606:4700:110:81a6:7dad:c4e0:7955:b709/128"
-      ],
-      "private_key": "ACfkRpqyMOyrdzU80mQ3+2GUUDRmIyEqhL1d3EO0CE0=",
-      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-      "reserved": [85,140,142],  
-
-      "mtu": 1120,
-      "fake_packets": "5-10"
+      "type": "direct",
+      "tag": "dns-in",
+      "listen": "127.0.0.1",
+      "listen_port": 6450,
+      "override_address": "1.1.1.1",
+      "override_port": 53
     }
-  ]
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "select",
+      "outbounds": [
+        "auto",
+        "🇳🇱 𝐈𝐑𝐂𝐏\n@Ln2Ray",
+        "🇳🇱 𝐈𝐑𝐂𝐏 | 𝐢𝐩𝐯𝟔\n@Ln2Ray",
+        "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟐\n@Ln2Ray",
+        "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟐 | 𝐢𝐩𝐯𝟔\n@Ln2Ray",
+        "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟏\u0026𝟐\n@Ln2Ray",
+        "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟏\u0026𝟐 | 𝐢𝐩𝐯𝟔\n@Ln2Ray",
+        "🇸🇪 \n@",
+        "🇸🇪 \n@ § 0",
+        "🇸🇪  | 𝐢𝐩𝐯𝟔\n@",
+        "🇦🇹 \n@",
+        "🇦🇹  | 𝐢𝐩𝐯𝟔\n@",
+        "🇦🇹 \n@ § 0",
+        "🇦🇹  | 𝐢𝐩𝐯𝟔\n@ § 0",
+        "🇫🇮 \n@",
+        "🇫🇮  | 𝐢𝐩𝐯𝟔\n@",
+        "🇫🇮 \n@ § 0",
+        "🇫🇮  | 𝐢𝐩𝐯𝟔\n@ § 0",
+        "🇳🇱 \n@",
+        "🇳🇱 \n@ § 0",
+        "🇳🇱  | 𝐢𝐩𝐯𝟔\n@",
+        "🇺🇸 \n@",
+        "🇺🇸 \n@ § 0",
+        "🇺🇸  | 𝐢𝐩𝐯𝟔\n@",
+        "🇦🇺 \n@",
+        "🇦🇺  | 𝟐\n@"
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "urltest",
+      "tag": "auto",
+      "outbounds": [
+        "🇳🇱 𝐈𝐑𝐂𝐏\n@Ln2Ray",
+        "🇳🇱 𝐈𝐑𝐂𝐏 | 𝐢𝐩𝐯𝟔\n@Ln2Ray",
+        "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟐\n@Ln2Ray",
+        "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟐 | 𝐢𝐩𝐯𝟔\n@Ln2Ray",
+        "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟏\u0026𝟐\n@Ln2Ray",
+        "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟏\u0026𝟐 | 𝐢𝐩𝐯𝟔\n@Ln2Ray",
+        "🇸🇪 \n@",
+        "🇸🇪 \n@ § 0",
+        "🇸🇪  | 𝐢𝐩𝐯𝟔\n@",
+        "🇦🇹 \n@",
+        "🇦🇹  | 𝐢𝐩𝐯𝟔\n@",
+        "🇦🇹 \n@ § 0",
+        "🇦🇹  | 𝐢𝐩𝐯𝟔\n@ § 0",
+        "🇫🇮 \n@",
+        "🇫🇮  | 𝐢𝐩𝐯𝟔\n@",
+        "🇫🇮 \n@ § 0",
+        "🇫🇮  | 𝐢𝐩𝐯𝟔\n@ § 0",
+        "🇳🇱 \n@",
+        "🇳🇱 \n@ § 0",
+        "🇳🇱  | 𝐢𝐩𝐯𝟔\n@",
+        "🇺🇸 \n@",
+        "🇺🇸 \n@ § 0",
+        "🇺🇸  | 𝐢𝐩𝐯𝟔\n@",
+        "🇦🇺 \n@",
+        "🇦🇺  | 𝟐\n@"
+      ],
+      "url": "http://www.google.com/generate_204",
+      "interval": "10m0s",
+      "idle_timeout": "1h40m0s"
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇳🇱 𝐈𝐑𝐂𝐏\n@Ln2Ray",
+      "server": "193.38.54.48",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "@ln2ray-5bdf790f-0af2-4481-a624-41b66e7e3489"
+      },
+      "password": "@ln2ray-5bdf790f-0af2-4481-a624-41b66e7e3489",
+      "tls": {
+        "enabled": true,
+        "server_name": "let-him-cook.ircp.online",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACCc2kqEYGusiYc5fj1smMpQJYQLckpS1bgOaCDLvoiofgAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇳🇱 𝐈𝐑𝐂𝐏 | 𝐢𝐩𝐯𝟔\n@Ln2Ray",
+      "server": "2a09:7c44:0:14::1",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "@ln2ray-5bdf790f-0af2-4481-a624-41b66e7e3489"
+      },
+      "password": "@ln2ray-5bdf790f-0af2-4481-a624-41b66e7e3489",
+      "tls": {
+        "enabled": true,
+        "server_name": "let-him-cook.ircp.online",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACCc2kqEYGusiYc5fj1smMpQJYQLckpS1bgOaCDLvoiofgAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟐\n@Ln2Ray",
+      "server": "37.221.127.169",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "@ln2ray-5bdf790f-0af2-4481-a624-41b66e7e3489-2"
+      },
+      "password": "@ln2ray-5bdf790f-0af2-4481-a624-41b66e7e3489-2",
+      "tls": {
+        "enabled": true,
+        "server_name": "let-her-cook.ircp.online",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACDEm4x9dlkKtLblXP7y0ZjKr7g6DdP2WaOgIjI6ujcnTQAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟐 | 𝐢𝐩𝐯𝟔\n@Ln2Ray",
+      "server": "2a09:7c44:0:13::1",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "@ln2ray-5bdf790f-0af2-4481-a624-41b66e7e3489-2"
+      },
+      "password": "@ln2ray-5bdf790f-0af2-4481-a624-41b66e7e3489-2",
+      "tls": {
+        "enabled": true,
+        "server_name": "let-her-cook.ircp.online",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACDEm4x9dlkKtLblXP7y0ZjKr7g6DdP2WaOgIjI6ujcnTQAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟏\u0026𝟐\n@Ln2Ray",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "188.114.96.12",
+      "server_port": 443,
+      "uuid": "5bdf790f-0af2-4481-a624-41b66e7e3489",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn.ircp.online",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/@ln2ray",
+        "headers": {
+          "Host": "cdn.ircp.online"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "vless",
+      "tag": "🇳🇱 𝐈𝐑𝐂𝐏 | 𝟏\u0026𝟐 | 𝐢𝐩𝐯𝟔\n@Ln2Ray",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "2a06:98c1:3121::c",
+      "server_port": 443,
+      "uuid": "5bdf790f-0af2-4481-a624-41b66e7e3489",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn.ircp.online",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/@ln2ray",
+        "headers": {
+          "Host": "cdn.ircp.online"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇸🇪 \n@",
+      "server": "83.226.36.112",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "mH4pNtUvtJVz"
+      },
+      "password": "ONSqhzOs55xn",
+      "tls": {
+        "enabled": true,
+        "server_name": "sahand.hideandsurf.com",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACBM/7OFwc4Djax1NZ0sUGm0Y2cHVn9IfI7ZhzoeHCMucwAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇸🇪 \n@ § 0",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "188.114.96.12",
+      "server_port": 443,
+      "uuid": "81625684-4552-49f8-b1c1-1f14790528c5",
+      "tls": {
+        "enabled": true,
+        "server_name": "helloworld.hideandsurf.com",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/@so5-Sher4BaD",
+        "headers": {
+          "Host": "helloworld.hideandsurf.com"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "vless",
+      "tag": "🇸🇪  | 𝐢𝐩𝐯𝟔\n@",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "2a06:98c1:3121::c",
+      "server_port": 443,
+      "uuid": "81625684-4552-49f8-b1c1-1f14790528c5",
+      "tls": {
+        "enabled": true,
+        "server_name": "helloworld.hideandsurf.com",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/@so5-Sher4BaD",
+        "headers": {
+          "Host": "helloworld.hideandsurf.com"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇦🇹 \n@",
+      "server": "5.181.21.84",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "Kh4meNeIGetL0stFromIran2024"
+      },
+      "password": "b947d658-8140-4ea0-ba18-23a6d48788bb",
+      "tls": {
+        "enabled": true,
+        "server_name": "sabalan.hideandsurf.com",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACB162hoUp9SqWj/B4TK0Yltr/j7PoqWR8YKyXvjpcZ6UwAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇦🇹  | 𝐢𝐩𝐯𝟔\n@",
+      "server": "2a13:6305:0:6::1",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "Kh4meNeIGetL0stFromIran2024"
+      },
+      "password": "b947d658-8140-4ea0-ba18-23a6d48788bb",
+      "tls": {
+        "enabled": true,
+        "server_name": "sabalan.hideandsurf.com",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACB162hoUp9SqWj/B4TK0Yltr/j7PoqWR8YKyXvjpcZ6UwAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇦🇹 \n@ § 0",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "188.114.96.12",
+      "server_port": 443,
+      "uuid": "b947d658-8140-4ea0-ba18-23a6d48788bb",
+      "tls": {
+        "enabled": true,
+        "server_name": "pathfinder.hideandsurf.com",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/Kh4meNeIGetL0stFromIran2024",
+        "headers": {
+          "Host": "pathfinder.hideandsurf.com"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "vless",
+      "tag": "🇦🇹  | 𝐢𝐩𝐯𝟔\n@ § 0",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "2a06:98c1:3121::c",
+      "server_port": 443,
+      "uuid": "b947d658-8140-4ea0-ba18-23a6d48788bb",
+      "tls": {
+        "enabled": true,
+        "server_name": "pathfinder.hideandsurf.com",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/Kh4meNeIGetL0stFromIran2024",
+        "headers": {
+          "Host": "pathfinder.hideandsurf.com"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇫🇮 \n@",
+      "server": "37.27.40.21",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "2X2lDkApzb07"
+      },
+      "password": "qeUUaVSyGo+C",
+      "tls": {
+        "enabled": true,
+        "server_name": "alborz.hideandsurf.com",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACAFJYRCZAKXi0LALj940P/Rk9HyghmQHgA/4/NuM7uCUwAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇫🇮  | 𝐢𝐩𝐯𝟔\n@",
+      "server": "2a01:4f9:c012:cece::1",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "2X2lDkApzb07"
+      },
+      "password": "qeUUaVSyGo+C",
+      "tls": {
+        "enabled": true,
+        "server_name": "alborz.hideandsurf.com",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACAFJYRCZAKXi0LALj940P/Rk9HyghmQHgA/4/NuM7uCUwAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇫🇮 \n@ § 0",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "188.114.96.12",
+      "server_port": 443,
+      "uuid": "323f3148-db47-4f7c-a26e-50a53093c261",
+      "tls": {
+        "enabled": true,
+        "server_name": "duckngo.hideandsurf.com",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/fJ4A1dBV",
+        "headers": {
+          "Host": "duckngo.hideandsurf.com"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "vless",
+      "tag": "🇫🇮  | 𝐢𝐩𝐯𝟔\n@ § 0",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "2a06:98c1:3121::c",
+      "server_port": 443,
+      "uuid": "323f3148-db47-4f7c-a26e-50a53093c261",
+      "tls": {
+        "enabled": true,
+        "server_name": "duckngo.hideandsurf.com",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/fJ4A1dBV",
+        "headers": {
+          "Host": "duckngo.hideandsurf.com"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇳🇱 \n@",
+      "server": "188.166.43.138",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "Kh4meNeIGetL0stFromIran2024"
+      },
+      "password": "b947d658-8140-4ea0-ba18-23a6d48788bb",
+      "tls": {
+        "enabled": true,
+        "server_name": "dgtlocn-nl.hideandsurf.com",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACBi/mj/3n7AqtnENy7dYtjEAIc21UWexNzeTtTEVoarAQAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇳🇱 \n@ § 0",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "188.114.96.12",
+      "server_port": 443,
+      "uuid": "b947d658-8140-4ea0-ba18-23a6d48788bb",
+      "tls": {
+        "enabled": true,
+        "server_name": "dgtlocn-nl-cdn.hideandsurf.com",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/Kh4meNeIGetL0stFromIran2024",
+        "headers": {
+          "Host": "dgtlocn-nl-cdn.hideandsurf.com"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "vless",
+      "tag": "🇳🇱  | 𝐢𝐩𝐯𝟔\n@",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "2a06:98c1:3121::c",
+      "server_port": 443,
+      "uuid": "b947d658-8140-4ea0-ba18-23a6d48788bb",
+      "tls": {
+        "enabled": true,
+        "server_name": "dgtlocn-nl-cdn.hideandsurf.com",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/Kh4meNeIGetL0stFromIran2024",
+        "headers": {
+          "Host": "dgtlocn-nl-cdn.hideandsurf.com"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇺🇸 \n@",
+      "server": "24.199.84.113",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "Kh4meNeIGetL0stFromIran2024"
+      },
+      "password": "b947d658-8140-4ea0-ba18-23a6d48788bb",
+      "tls": {
+        "enabled": true,
+        "server_name": "freedom.hideandsurf.com",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACD1ixEyxjexM4m9OTmxqKaX2mYZdyj9RtrbnOqit1mABQAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 \n@ § 0",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "188.114.96.12",
+      "server_port": 443,
+      "uuid": "b947d658-8140-4ea0-ba18-23a6d48788bb",
+      "tls": {
+        "enabled": true,
+        "server_name": "iran.hideandsurf.com",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/Kh4meNeIGetL0stFromIran2024",
+        "headers": {
+          "Host": "iran.hideandsurf.com"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸  | 𝐢𝐩𝐯𝟔\n@",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      },
+      "server": "2a06:98c1:3121::c",
+      "server_port": 443,
+      "uuid": "b947d658-8140-4ea0-ba18-23a6d48788bb",
+      "tls": {
+        "enabled": true,
+        "server_name": "iran.hideandsurf.com",
+        "alpn": "http/1.1",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/Kh4meNeIGetL0stFromIran2024",
+        "headers": {
+          "Host": "iran.hideandsurf.com"
+        }
+      },
+      "packet_encoding": "xudp"
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇦🇺 \n@",
+      "server": "158.179.17.59",
+      "server_port": 443,
+      "obfs": {
+        "type": "salamander",
+        "password": "azadi1"
+      },
+      "password": "azadi1",
+      "tls": {
+        "enabled": true,
+        "server_name": "azadi1.dgi000.store",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACB4u436hfAkDe/FpuMFekdb9tO3/BF/kP6sVFgZpiyJVQAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇦🇺  | 𝟐\n@",
+      "server": "207.211.147.18",
+      "server_port": 443,
+      "up_mbps": 10000,
+      "down_mbps": 10000,
+      "obfs": {
+        "type": "salamander",
+        "password": "azadi2"
+      },
+      "password": "azadi2",
+      "tls": {
+        "enabled": true,
+        "server_name": "azadi2.dgi000.store",
+        "alpn": "h3",
+        "min_version": "1.3",
+        "max_version": "1.3",
+        "ech": {
+          "enabled": true,
+          "pq_signature_schemes_enabled": true,
+          "config": [
+            "-----BEGIN ECH CONFIGS-----",
+            "AFf+DQBTAAAgACCkinnV7xhAgfgYMag1gZvWrsODivfQnc24kR2wTsH1RgAIAAEA",
+            "AQABAAMAIFstLXBxLXNpZ25hdHVyZS1zY2hlbWVzLWVuYWJsZWRdAAA=",
+            "-----END ECH CONFIGS-----"
+          ]
+        }
+      }
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "direct",
+      "tag": "direct-fragment",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-20",
+        "sleep": "0"
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "bypass"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    }
+  ],
+  "route": {
+    "geoip": {
+      "path": "geo-assets/sagernet-sing-geoip-geoip.db"
+    },
+    "geosite": {
+      "path": "geo-assets/sagernet-sing-geosite-geosite.db"
+    },
+    "rules": [
+      {
+        "inbound": "dns-in",
+        "outbound": "dns-out"
+      },
+      {
+        "port": 53,
+        "outbound": "dns-out"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "select"
+      },
+      {
+        "geoip": "private",
+        "outbound": "bypass"
+      }
+    ],
+    "final": "select",
+    "auto_detect_interface": true,
+    "override_android_vpn": true
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "clash.db"
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:6756",
+      "secret": "gaPiGtXZCx8dvDUs"
+    }
+  }
 }
-
