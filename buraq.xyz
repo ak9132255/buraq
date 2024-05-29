@@ -1,1 +1,37 @@
-vless://2292a5ab-2d68-440f-8b16-512d5bbfad54@37.27.4.189:35482?type=ws&path=%2F&security=none#buraq.3
+//profile-title: base64:8J+ViiBXQVJQIE9OIFdBUlA=
+{
+  "outbounds": [
+    {
+      "type": "wireguard",
+      "tag": "Warp ON Warp § 0",
+      "detour": "Iran IP  § 1",
+      "local_address": [
+        "172.16.0.2/24",
+        "2606:4700:110:816c:aaf4:b45d:fd41:ddfe/128"
+      ],
+      "private_key": "cMCxspazDRZJp1HI3l2DQ7oMCCTpyXUAWQNHAILSHUA=",
+      "server": "engage.cloudflareclient.com",
+      "server_port": 2408,
+      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+      "reserved": [ 45, 26, 114 ],
+      "mtu": 1280
+    },
+    {
+      "type": "wireguard",
+      "tag": "Iran IP  § 1",
+      "local_address": [
+        "172.16.0.2/24",
+        "2606:4700:110:89e7:4684:7f4d:6f67:708a/128"
+      ],
+      "private_key": "wARf9lfd+QVR1d2wB9d3kvugTJzZ+lVYZnqsj4PP63Y=",
+      "server": "auto",
+      "server_port": 0,
+      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+      "reserved": [ 234, 241, 129 ],
+      "mtu": 1280,
+      "fake_packets": "8-15",
+      "fake_packets_size": "40-100",
+      "fake_packets_delay": "20-250"
+    }
+  ]
+}
